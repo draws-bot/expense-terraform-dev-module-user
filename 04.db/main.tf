@@ -1,4 +1,4 @@
-####RDS creation db##########
+####RDS creation db##########                         remember rds creation here
 
 module "db" {
   source = "terraform-aws-modules/rds/aws"
