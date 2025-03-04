@@ -8,8 +8,8 @@ pipeline {
         ansiColor('xterm')
     }
     parameters {
-    choice(name: 'action', choices: ['Apply', 'Destroy'], description: 'Pick something')
-    }
+        choice(name: 'action', choices: ['Apply', 'Destroy'], description: 'Pick something')
+    }    
     stages {
         stage('Init') {
             steps {
@@ -28,6 +28,11 @@ pipeline {
             }
         }
         stage('apply') {
+            when {
+                expression{
+                    params.action == 'Apply'
+                }
+            }            
             input {
                 message "Should we continue?"
                 ok "Yes, we should."
@@ -39,6 +44,19 @@ pipeline {
                 """
             }
         }
+        stage('destroy') {
+            when {
+                expression{
+                    params.action == 'destroy'
+                }
+            }            
+            steps {
+                sh """
+                cd 01.vpc
+                terraform destroy -auto-approve
+                """
+            }
+        }        
     }
     post { 
         always { 
